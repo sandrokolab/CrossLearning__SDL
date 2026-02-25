@@ -1,0 +1,8 @@
+{
+  "name": "SDL - Smart Digital Learning",
+  "description": "A comprehensive e-learning platform integrating AI-driven content creation, real-time tutoring, analytics, and course management.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
