@@ -58,3 +58,7 @@ export interface GeneratedContent {
   tags: string[];
   estimatedDuration?: string;
 }
+export interface Site {
+  id: string;
+  name: string;
+}

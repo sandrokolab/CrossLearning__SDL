@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Brand } from '../theme';
+import { Site } from '../types';
 
 interface PortalSelectionProps {
-  onValidate: () => void;
+  onValidate: (site: Site) => void;
 }
 
+const SITES: Site[] = [
+  { id: 'mty', name: 'Planta Monterrey - Ensamble A' },
+  { id: 'cdmx', name: 'Planta CDMX - Fundición' },
+  { id: 'gdl', name: 'Planta Guadalajara - Logística' },
+];
+
 export const PortalSelection: React.FC<PortalSelectionProps> = ({ onValidate }) => {
+  const [selectedSiteId, setSelectedSiteId] = useState<string>('');
+
+  const handleValidate = () => {
+    const site = SITES.find(s => s.id === selectedSiteId);
+    if (site) {
+      onValidate(site);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans">
       
@@ -43,12 +59,13 @@ export const PortalSelection: React.FC<PortalSelectionProps> = ({ onValidate }) 
               <div className="relative">
                   <select 
                     className="w-full bg-white border border-slate-300 text-slate-700 py-4 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 appearance-none text-lg"
-                    defaultValue=""
+                    value={selectedSiteId}
+                    onChange={(e) => setSelectedSiteId(e.target.value)}
                   >
                       <option value="" disabled>Ningún sitio web</option>
-                      <option value="mty">Planta Monterrey - Ensamble A</option>
-                      <option value="cdmx">Planta CDMX - Fundición</option>
-                      <option value="gdl">Planta Guadalajara - Logística</option>
+                      {SITES.map(site => (
+                        <option key={site.id} value={site.id}>{site.name}</option>
+                      ))}
                   </select>
                   {/* Custom Arrow for Dropdown */}
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
@@ -62,13 +79,18 @@ export const PortalSelection: React.FC<PortalSelectionProps> = ({ onValidate }) 
               <div className="flex gap-4">
                   <button 
                     className="flex-1 bg-slate-400 hover:bg-slate-500 text-white font-bold py-3 px-6 rounded shadow transition-colors duration-200 uppercase tracking-wider text-sm"
-                    onClick={() => alert('Selección Cancelada')}
+                    onClick={() => setSelectedSiteId('')}
                   >
                       Cancelar
                   </button>
                   <button 
-                    onClick={onValidate}
-                    className="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded shadow transition-colors duration-200 uppercase tracking-wider text-sm"
+                    onClick={handleValidate}
+                    disabled={!selectedSiteId}
+                    className={`flex-1 font-bold py-3 px-6 rounded shadow transition-colors duration-200 uppercase tracking-wider text-sm ${
+                      selectedSiteId 
+                        ? 'bg-slate-800 hover:bg-slate-900 text-white' 
+                        : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    }`}
                   >
                       Validar
                   </button>
