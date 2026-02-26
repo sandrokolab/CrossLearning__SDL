@@ -1,0 +1,45 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ldx
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '10'
+    spec:
+      containerConcurrency: 80
+      containers:
+        - image: gcr.io/PROJECT_ID/ldx:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1Gi
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: GOOGLE_GENERATIVE_AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GOOGLE_GENERATIVE_AI_API_KEY
+                  key: latest
+            - name: NEXT_PUBLIC_SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: NEXT_PUBLIC_SUPABASE_URL
+                  key: latest
+            - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+                  key: latest
+            - name: SUPABASE_SERVICE_ROLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: SUPABASE_SERVICE_ROLE_KEY
+                  key: latest
